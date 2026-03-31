@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>妙麗歲數計算機</title>
+  <style>
+    /* 這裡貼入妳 CodePen 的所有 CSS 內容 */
+    :root {
+    --primary-color: #6c5ce7; /* 柔和的紫色，適合搭配狗狗圖 */
+    --text-color: #2d3436;
+    --bg-gray: #f1f2f6;
+  }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    
+    /* --- 控制位置：左上角 --- */
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: 50px; /* 稍微往下移一點，不要貼太緊 */
+    padding-left: 50px;
+    box-sizing: border-box;
+
+    /* --- 原本的狗狗背景圖 --- */
+    background-image: url('https://plus.unsplash.com/premium_photo-1683134013354-fdcdf4552ff8?q=80&w=1920&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    
+    font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+    color: var(--text-color);
+  }
+
+  /* --- Glassmorphism 對話框 --- */
+  .thought-bubble {
+    /* 關鍵：半透明白色背景 */
+    background-color: rgba(255, 255, 255, 0.45); 
+    
+    /* 關鍵：毛玻璃模糊效果 */
+    backdrop-filter: blur(15px); 
+    -webkit-backdrop-filter: blur(15px);
+    
+    width: 260px;
+    padding: 1.2rem;
+    border-radius: 30px;
+    
+    /* 淡淡的邊框增加質感 */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    
+    /* 柔和的陰影 */
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+    
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* 標題與文字微調 */
+  h2 {
+    font-size: 1.1rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: #333;
+  }
+
+  .input-group {
+    width: 100%;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+  }
+
+  input[type="date"] {
+    padding: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 120px;
+    font-size: 0.85rem;
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  /* 按鈕美化與動畫 */
+  button {
+    width: 100%;
+    padding: 8px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+    
+    /* 增加陰影讓按鈕更立體 */
+    box-shadow: 0 4px 10px rgba(108, 92, 231, 0.2);
+    
+    /* Transition 動畫效果 */
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+
+  button:hover {
+    background-color: #5b4bc4;
+    transform: translateY(-2px); /* 微微上浮 */
+    box-shadow: 0 6px 15px rgba(108, 92, 231, 0.3);
+  }
+
+  button:active {
+    transform: translateY(1px); /* 按下時下沉 */
+  }
+
+  /* 文獻與結果區塊微調 */
+  .references {
+    font-size: 0.7rem;
+    margin-top: 15px;
+    border-top: 1px dashed rgba(0, 0, 0, 0.1);
+    padding-top: 10px;
+    width: 100%;
+    text-align: left;
+    color: #555;
+  }
+  .references ul { padding-left: 12px; margin: 3px 0; }
+  .references a { color: var(--primary-color); text-decoration: none; }
+  .references a:hover { text-decoration: underline; }
+
+  .result-box {
+    margin-top: 1rem;
+    background-color: rgba(255, 255, 255, 0.6);
+    padding: 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    text-align: center;
+    line-height: 1.6;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  </style>
+</head>
+<body>
+  <script>
+    /* 這裡貼入妳 CodePen 的所有 JS 內容 */
+    // --- localStorage 關鍵：網頁載入時檢查 ---
+    window.onload = function() {
+    const savedBirthDate = localStorage.getItem('dogBirthDate');
+    const savedResultText = localStorage.getItem('dogResultText');
+
+    if (savedBirthDate && savedResultText) {
+        // 如果有上次記錄，自動填入日期並顯示結果
+        document.getElementById('birthDate').value = savedBirthDate;
+        const resultArea = document.getElementById('resultArea');
+        resultArea.style.display = 'block';
+        resultArea.innerHTML = savedResultText;
+    }
+    };
+
+    document.getElementById('calculateBtn').addEventListener('click', function() {
+    const birthDateValue = document.getElementById('birthDate').value;
+    if (!birthDateValue) return;
+
+    const today = new Date();
+    const birthDate = new Date(birthDateValue);
+    const resultArea = document.getElementById('resultArea');
+
+    // 計算邏輯
+    let diffTime = today - birthDate;
+    let dogAge = diffTime / (1000 * 60 * 60 * 24 * 365.25);
+    
+    if (dogAge < 0) {
+        alert("出生日期不能在未來喔！");
+        return;
+    }
+    
+    // 保留一位小數並轉回數字
+    dogAge = parseFloat(dogAge.toFixed(1));
+
+    // 換算人類年齡邏輯 (15-9-4 規則)
+    let humanAge = 0;
+    if (dogAge <= 1) {
+        humanAge = dogAge * 15;
+    } else if (dogAge <= 2) {
+        humanAge = 15 + (dogAge - 1) * 9;
+    } else {
+        humanAge = 24 + (dogAge - 2) * 4;
+    }
+    humanAge = humanAge.toFixed(1);
+
+    const resultText = `妙麗現在大約 <strong>${dogAge}</strong> 歲狗年齡，<br>換算人類年齡大約是 <strong>${humanAge}</strong> 歲。`;
+
+    // 顯示結果
+    resultArea.style.display = 'block';
+    resultArea.innerHTML = resultText;
+
+    // --- localStorage 關鍵：計算後儲存 ---
+    localStorage.setItem('dogBirthDate', birthDateValue);
+    localStorage.setItem('dogResultText', resultText);
+    });
+  </script>
+</body>
+</html>
