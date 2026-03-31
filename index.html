@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>妙麗歲數計算機</title>
+  <title>🐶 妙麗歲數計算機</title>
   <style>
     :root {
       --primary-color: #6c5ce7;
       --text-color: #2d3436;
-      --bg-gray: #f1f2f6;
     }
 
     body {
@@ -17,8 +16,8 @@
       display: flex;
       align-items: flex-start;
       justify-content: flex-start;
-      padding-top: 50px;
-      padding-left: 50px;
+      padding-top: 60px;
+      padding-left: 60px;
       box-sizing: border-box;
       background-image: url('https://plus.unsplash.com/premium_photo-1683134013354-fdcdf4552ff8?q=80&w=1920&auto=format&fit=crop');
       background-size: cover;
@@ -30,26 +29,24 @@
     }
 
     .thought-bubble {
-      background-color: rgba(255, 255, 255, 0.45); 
+      background-color: rgba(255, 255, 255, 0.5); 
       backdrop-filter: blur(15px); 
       -webkit-backdrop-filter: blur(15px);
       width: 260px;
-      padding: 1.2rem;
+      padding: 1.5rem;
       border-radius: 30px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
       position: relative;
       display: flex;
       flex-direction: column;
-      align-items: center;
     }
 
     h2 {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       margin-top: 0;
-      margin-bottom: 1rem;
+      margin-bottom: 1.2rem;
       text-align: center;
-      color: #333;
     }
 
     .input-group {
@@ -58,60 +55,57 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
     }
 
     input[type="date"] {
-      padding: 5px;
+      padding: 6px;
       border: 1px solid rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-      width: 120px;
-      font-size: 0.85rem;
-      background: rgba(255, 255, 255, 0.7);
+      border-radius: 10px;
+      width: 130px;
+      font-size: 0.9rem;
+      background: rgba(255, 255, 255, 0.8);
     }
 
     button {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       background-color: var(--primary-color);
       color: white;
       border: none;
       border-radius: 12px;
       cursor: pointer;
       font-weight: bold;
-      font-size: 0.9rem;
-      box-shadow: 0 4px 10px rgba(108, 92, 231, 0.2);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+      font-size: 1rem;
+      box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+      transition: all 0.2s ease;
     }
 
     button:hover {
       background-color: #5b4bc4;
       transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(108, 92, 231, 0.3);
+      box-shadow: 0 6px 18px rgba(108, 92, 231, 0.4);
     }
 
     .references {
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       margin-top: 15px;
       border-top: 1px dashed rgba(0, 0, 0, 0.1);
       padding-top: 10px;
-      width: 100%;
-      text-align: left;
-      color: #555;
+      color: #444;
     }
-    .references ul { padding-left: 12px; margin: 3px 0; }
-    .references a { color: var(--primary-color); text-decoration: none; }
+    .references ul { padding-left: 15px; margin: 5px 0; }
+    .references a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
 
     .result-box {
-      margin-top: 1rem;
-      background-color: rgba(255, 255, 255, 0.6);
-      padding: 0.8rem;
+      margin-top: 1.2rem;
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 1rem;
       border-radius: 15px;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       text-align: center;
       line-height: 1.6;
-      width: 100%;
-      box-sizing: border-box;
+      border: 1px solid rgba(108, 92, 231, 0.2);
     }
   </style>
 </head>
@@ -121,12 +115,14 @@
     <h2>🐶 妙麗歲數計算機</h2>
     
     <div class="input-group">
-      <label for="birthDate">狗狗的出生日期：</label>
+      <label for="birthDate">出生日期：</label>
       <input type="date" id="birthDate" value="2023-02-28">
     </div>
 
     <button id="calculateBtn">開始計算</button>
     
+    <div id="resultArea" class="result-box" style="display: none;"></div>
+
     <div class="references">
       <p>📚 文獻來源依據：</p>
       <ul>
@@ -134,20 +130,17 @@
         <li><a href="https://www.akc.org/expert-advice/health/how-to-calculate-dog-years-to-human-years/" target="_blank">美國犬業俱樂部 (AKC)</a></li>
       </ul>
     </div>
-
-    <div id="resultArea" class="result-box" style="display: none;"></div>
   </div>
 
   <script>
     window.onload = function() {
-      const savedBirthDate = localStorage.getItem('dogBirthDate');
-      const savedResultText = localStorage.getItem('dogResultText');
-
-      if (savedBirthDate && savedResultText) {
-          document.getElementById('birthDate').value = savedBirthDate;
-          const resultArea = document.getElementById('resultArea');
-          resultArea.style.display = 'block';
-          resultArea.innerHTML = savedResultText;
+      const savedDate = localStorage.getItem('dogBirthDate');
+      const savedResult = localStorage.getItem('dogResultText');
+      if (savedDate && savedResult) {
+        document.getElementById('birthDate').value = savedDate;
+        const resultArea = document.getElementById('resultArea');
+        resultArea.style.display = 'block';
+        resultArea.innerHTML = savedResult;
       }
     };
 
@@ -163,19 +156,18 @@
       let dogAge = diffTime / (1000 * 60 * 60 * 24 * 365.25);
       
       if (dogAge < 0) {
-          alert("出生日期不能在未來喔！");
-          return;
+        alert("出生日期不能在未來喔！");
+        return;
       }
       
       dogAge = parseFloat(dogAge.toFixed(1));
-
       let humanAge = 0;
       if (dogAge <= 1) {
-          humanAge = dogAge * 15;
+        humanAge = dogAge * 15;
       } else if (dogAge <= 2) {
-          humanAge = 15 + (dogAge - 1) * 9;
+        humanAge = 15 + (dogAge - 1) * 9;
       } else {
-          humanAge = 24 + (dogAge - 2) * 4;
+        humanAge = 24 + (dogAge - 2) * 4;
       }
       humanAge = humanAge.toFixed(1);
 
